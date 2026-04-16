@@ -57,24 +57,29 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'tasks' | 'reminders' | 'stats' | 'admin'>('dashboard');
   const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Check if user is already "logged in"
   useEffect(() => {
-    console.log('DEBUG: Iniciando verificación de sesión...');
+    console.log('DEBUG: Iniciando verificación de sesión consolidada...');
     
     // Check custom phone auth
     const verifiedPhone = localStorage.getItem('mar_verified_phone');
     const adminAuth = localStorage.getItem('mar_admin_auth');
 
     if (adminAuth === 'true') {
+      setIsAdmin(true);
       setUser({ id: 'admin', email: 'gaorsystempe@gmail.com', full_name: 'Administrador' });
     } else if (verifiedPhone) {
       setUser({ id: verifiedPhone, phone: verifiedPhone });
+      if (verifiedPhone === '+51999888777') {
+        setIsAdmin(true);
+      }
     }
     
     setLoading(false);
-    console.log('DEBUG: Verificación finalizada. User=', user);
+    console.log('DEBUG: Verificación finalizada. User=', user, 'isAdmin=', isAdmin);
   }, []);
 
   const [isAdminCreatingUser, setIsAdminCreatingUser] = useState(false);
