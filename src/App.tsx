@@ -98,6 +98,8 @@ export default function App() {
   const [reminderText, setReminderText] = useState('');
   const [isForToday, setIsForToday] = useState(true);
   const [reminderActive, setReminderActive] = useState(false);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
   const [scheduledTime, setScheduledTime] = useState('09:00');
   const [newTaskDueDate, setNewTaskDueDate] = useState('');
   const [newTaskComments, setNewTaskComments] = useState('');
