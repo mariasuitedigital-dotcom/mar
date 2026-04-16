@@ -49,6 +49,17 @@ const MOCK_TASKS: Task[] = [
 ];
 
 export default function App() {
+  const hostname = window.location.hostname;
+  const isSaaS = hostname === 'app.mariasuite.cloud';
+
+  useEffect(() => {
+    if (isSaaS) {
+      document.title = "SaaS de MAR | Tu asistente personal inteligente";
+    } else {
+      document.title = "MAR | Tu asistente personal inteligente";
+    }
+  }, [isSaaS]);
+
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'tasks' | 'reminders' | 'stats' | 'admin'>('dashboard');
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -113,7 +124,7 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem('mar_verified_phone');
     localStorage.removeItem('mar_admin_auth');
-    window.location.reload();
+    window.location.href = 'https://mar.mariasuite.cloud';
   };
 
   // Check if it's first time or user wants help
@@ -523,10 +534,13 @@ export default function App() {
     );
   }
 
-  const hostname = window.location.hostname;
-  const isSaaS = hostname === 'app.mariasuite.cloud';
-
+  // Si no es SaaS, siempre Portal
   if (!isSaaS) {
+    return <Portal />;
+  }
+
+  // Si es SaaS pero no hay usuario, mostrar Portal (Login)
+  if (!user) {
     return <Portal />;
   }
 
