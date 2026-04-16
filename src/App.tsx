@@ -49,7 +49,6 @@ const MOCK_TASKS: Task[] = [
 ];
 
 export default function App() {
-  const [view, setView] = useState<'landing' | 'app'>('landing');
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'tasks' | 'reminders' | 'stats' | 'admin'>('dashboard');
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -96,7 +95,6 @@ export default function App() {
     if (adminAuth === 'true') {
       setIsAdmin(true);
       setUser({ id: 'admin', email: 'gaorsystempe@gmail.com', full_name: 'Administrador' });
-      setView('app');
       setLoading(false);
     } else if (verifiedPhone) {
       setUser({ id: verifiedPhone, phone: verifiedPhone });
@@ -104,7 +102,6 @@ export default function App() {
       if (verifiedPhone === '+51999888777') { // Reemplaza con tu número real
         setIsAdmin(true);
       }
-      setView('app');
       setLoading(false);
     } else {
       setLoading(false);
@@ -526,7 +523,10 @@ export default function App() {
     );
   }
 
-  if (view === 'landing') {
+  const hostname = window.location.hostname;
+  const isSaaS = hostname === 'app.mariasuite.cloud';
+
+  if (!isSaaS) {
     return <Portal />;
   }
 
