@@ -51,23 +51,32 @@ const MOCK_TASKS: Task[] = [
 export default function App() {
   const hostname = window.location.hostname;
   const isSaaS = hostname === 'app.mariasuite.cloud';
-
-  useEffect(() => {
-    if (isSaaS) {
-      document.title = "SaaS de MAR | Tu asistente personal inteligente";
-    } else {
-      document.title = "MAR | Tu asistente personal inteligente";
-    }
-  }, [isSaaS]);
+  
+  // Log inmediato
+  console.log('DEBUG: hostname=', hostname, 'isSaaS=', isSaaS);
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'tasks' | 'reminders' | 'stats' | 'admin'>('dashboard');
   const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [allUsers, setAllUsers] = useState<any[]>([]);
-  const [allPayments, setAllPayments] = useState<any[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Check if user is already "logged in"
+  useEffect(() => {
+    console.log('DEBUG: Iniciando verificación de sesión...');
+    
+    // Check custom phone auth
+    const verifiedPhone = localStorage.getItem('mar_verified_phone');
+    const adminAuth = localStorage.getItem('mar_admin_auth');
+
+    if (adminAuth === 'true') {
+      setUser({ id: 'admin', email: 'gaorsystempe@gmail.com', full_name: 'Administrador' });
+    } else if (verifiedPhone) {
+      setUser({ id: verifiedPhone, phone: verifiedPhone });
+    }
+    
+    setLoading(false);
+    console.log('DEBUG: Verificación finalizada. User=', user);
+  }, []);
+
   const [isAdminCreatingUser, setIsAdminCreatingUser] = useState(false);
   const [newAdminUser, setNewAdminUser] = useState({ full_name: '', email: '', phone_number: '', subscription_status: 'pending' });
   const [newTaskTitle, setNewTaskTitle] = useState('');
